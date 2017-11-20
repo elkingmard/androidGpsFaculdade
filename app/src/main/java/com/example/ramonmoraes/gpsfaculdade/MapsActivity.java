@@ -112,7 +112,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         newSpeed = (this.velocidadeConfig==1) ? speedKMH : speedMPH;
         return newSpeed;
     }
+    public void modifyBearing(){
 
+        if(this.orientacaoConfig==2){
+            this.location.setBearing(this.location.getBearing());
+        }
+
+    }
     public void setCellLocation() {
         try {
             String provider = locManager.PASSIVE_PROVIDER;
@@ -126,6 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 this.altitude = this.location.getAltitude();
 
                 this.setInfosOverMap();
+                this.modifyBearing();
             }
         }catch (SecurityException e){
             e.printStackTrace();
