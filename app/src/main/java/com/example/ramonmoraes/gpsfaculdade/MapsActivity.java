@@ -38,6 +38,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationProvider locPro; // Provedor de localização
     private static final int REQUEST_LOCATION = 2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,15 +62,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng cellPhoneLocation = new LatLng(this.latitude, this.longitude);
         mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
+
     }
 
     public void setInfosOverMap(){
-
         this.mapLat.setText( "latitude: " + this.latitude );
         this.mapLong.setText( "longitude: " + this.longitude );
         this.mapAlt.setText( "altitude: " + this.altitude );
         this.mapSpeed.setText( "Velocidade: " + this.speed );
-
     }
 
     public void setCellLocation() {
