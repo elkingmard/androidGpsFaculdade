@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 public class ConfigActivity extends AppCompatActivity {
 
     private Integer precisao; //1 = grao-decimal , 2 = grau-minuto decimal , 3 = grau-minuto-segundo decimal
-    private Integer velocidade; // Km/h ou Mph
-    private Integer orientacao;
+    private Integer velocidade; // 1= Km/h , 2 = Mph
+    private Integer orientacao; //1-nenhuma 2 - north up 3-course up
     private Integer tipoMapa; //1= vetorial , 2 = imagem satelite;
     private Boolean trafego;
 
@@ -41,7 +42,7 @@ public class ConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
         instanceButtons();
-
+        loadConfigPref();
         btnSalvar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -105,7 +106,76 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     private void loadConfigPref(){
+        loadConfigPrefValues();
+
+        switch (this.precisao) {
+            case 1:
+                btnPrecisao1.setChecked(true);
+                break;
+            case 2:
+                btnPrecisao2.setChecked(true);
+                break;
+            case 3:
+                btnPrecisao3.setChecked(true);
+                break;
+            default:
+                btnPrecisao1.setChecked(true);
+                break;
+        }
+
+        switch (this.velocidade){
+            case 1:
+                btnVel1.setChecked(true);
+                break;
+            case 2:
+                btnVel2.setChecked(true);
+                break;
+            default:
+                btnVel1.setChecked(true);
+                break;
+        }
+
+        switch (this.orientacao){
+            case 1:
+                btnOrientacao1.setChecked(true);
+                break;
+            case 2:
+                btnOrientacao2.setChecked(true);
+                break;
+            case 3:
+                btnOrientacao3.setChecked(true);
+                break;
+            default:
+                btnOrientacao1.setChecked(true);
+                break;
+        }
+
+        switch (this.tipoMapa){
+            case 1:
+                btnMapType1.setChecked(true);
+                break;
+            case 2:
+                btnMapType2.setChecked(true);
+                break;
+            default:
+                btnMapType1.setChecked(true);
+                break;
+        }
+
+        if(this.trafego){
+            btnTrafego.setActivated(true);
+        }else{
+            btnTrafego.setActivated(false);
+        }
 
     }
 
+    private void loadConfigPrefValues() {
+        SharedPreferences sharedPref = getSharedPreferences("gpsConfig",CONTEXT_IGNORE_SECURITY);
+        this.precisao = sharedPref.getInt("precisao", -1);
+        this.velocidade = sharedPref.getInt("velocidade", -1);
+        this.orientacao = sharedPref.getInt("orientacao", -1);
+        this.tipoMapa = sharedPref.getInt("tipoMapa", -1);
+        this.trafego = sharedPref.getBoolean("trafego",false);
+    }
 }
