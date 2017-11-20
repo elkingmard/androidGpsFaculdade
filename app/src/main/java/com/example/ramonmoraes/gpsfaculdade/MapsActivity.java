@@ -104,6 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return newLatString;
     }
+
     private String getModifiedSpeed(){
         String newSpeed = Double.toString(this.speed); // dado original em m/s
         String speedKMH = Double.toString(this.speed * 3.6)+"Km/hr";
@@ -111,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         newSpeed = (this.velocidadeConfig==1) ? speedKMH : speedMPH;
         return newSpeed;
     }
+
     public void setCellLocation() {
         try {
             String provider = locManager.PASSIVE_PROVIDER;
@@ -136,6 +138,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             this.locPro = locManager.getProvider(LocationManager.GPS_PROVIDER);
         } catch (SecurityException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void modifieMapType(GoogleMap map){
+        switch (this.tipoMapaConfig){
+            case 1:
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case 2:
+                map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            default:
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
         }
     }
 
@@ -165,6 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
 
+        modifieMapType(mMap);
     }
 
     @Override
