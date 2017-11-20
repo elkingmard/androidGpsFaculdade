@@ -141,18 +141,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void modifieMapType(GoogleMap map){
+    private void modifieMapType(){
         switch (this.tipoMapaConfig){
             case 1:
-                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 break;
             case 2:
-                map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                this.mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 break;
             default:
-                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 break;
         }
+    }
+
+    private void modifiedTrafficMap(){
+        this.mMap.setTrafficEnabled((this.trafegoConfig));
     }
 
     @Override
@@ -181,7 +185,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
 
-        modifieMapType(mMap);
+        this.modifieMapType();
+        this.modifiedTrafficMap();
     }
 
     @Override
