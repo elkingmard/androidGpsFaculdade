@@ -25,7 +25,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private double latitude;
     private double longitude;
-
+    private double altitude;
+    private double speed;
     private LocationManager locManager; // O Gerente de localização
     private LocationProvider locPro; // Provedor de localização
     private static final int REQUEST_LOCATION = 2;
@@ -46,10 +47,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         LatLng cellPhoneLocation = new LatLng(this.latitude, this.longitude);
         mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
+    }
+
+    public void setInfosOverMap(){
+
+
+
     }
 
     public void setCellLocation() {
@@ -59,6 +65,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(location !=null){
                 this.latitude = location.getLatitude();
                 this.longitude = location.getLongitude();
+                this.speed = location.getSpeed();
+                this.altitude = location.getAltitude();
+
+                this.setInfosOverMap();
             }
 
         }catch (SecurityException e){
