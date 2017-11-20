@@ -10,6 +10,7 @@ import android.location.LocationProvider;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,23 +48,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         LatLng cellPhoneLocation = new LatLng(this.latitude, this.longitude);
-        mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Marker on'tu"));
+        mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
     }
 
     public void setCellLocation() {
-            String provider;
-            Location location = this.locManager.getLastKnownLocation(String provider);
-            this.latitude=location.getLatitude();
-            this.longitude=location.getLongitude();
+        try {
+            String provider = locManager.PASSIVE_PROVIDER;
+            Location location = this.locManager.getLastKnownLocation(provider.toString());
+            if(location !=null){
+                this.latitude = location.getLatitude();
+                this.longitude = location.getLongitude();
+            }
 
-    }
+        }catch (SecurityException e){
+            e.printStackTrace();
+            return;
+        }
+        }
 
     public void ativaGPS() {
         try {
             this.locPro = locManager.getProvider(LocationManager.GPS_PROVIDER);
-
-            setCellLocation();
         } catch (SecurityException e) {
             e.printStackTrace();
         }
@@ -73,18 +79,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            //&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
            ){
             // A permissão foi dada
+            setCellLocation();
             ativaGPS();
         } else {
             // Solicite a permissão
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_LOCATION);
+            //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
 
         }
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == REQUEST_LOCATION) {
             if(grantResults.length == 1 && grantResults[0] ==
