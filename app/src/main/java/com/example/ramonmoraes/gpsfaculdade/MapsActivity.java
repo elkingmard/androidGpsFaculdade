@@ -2,6 +2,7 @@ package com.example.ramonmoraes.gpsfaculdade;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,6 +30,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double altitude;
     private double speed;
 
+    private Integer precisaoConfig; //1 = grao-decimal , 2 = grau-minuto decimal , 3 = grau-minuto-segundo decimal
+    private Integer velocidadeConfig; // 1= Km/h , 2 = Mph
+    private Integer tipoMapaConfig; //1= vetorial , 2 = imagem satelite;
+    private Integer orientacaoConfig;//1-nenhuma 2 - north up , 3-course up
+    private Boolean trafegoConfig;//true ativado , false=desativado
+
     private TextView mapLat;
     private TextView mapLong;
     private TextView mapAlt;
@@ -36,6 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private LocationManager locManager; // O Gerente de localização
     private LocationProvider locPro; // Provedor de localização
+    private Location location;
     private static final int REQUEST_LOCATION = 2;
 
 
@@ -49,43 +57,68 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        instanceTextView();
+        readSharedPrefs();
+    }
 
+    private void instanceTextView(){
         mapLat = (TextView) findViewById(R.id.textLatMap);
         mapLong = (TextView) findViewById(R.id.textLongMap);
         mapAlt = (TextView) findViewById(R.id.textAltMap);
         mapSpeed = (TextView) findViewById(R.id.textSpeedMap);
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        LatLng cellPhoneLocation = new LatLng(this.latitude, this.longitude);
-        mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
 
+    private void readSharedPrefs(){
+        SharedPreferences sharedPref = getSharedPreferences("gpsConfig",CONTEXT_IGNORE_SECURITY);
+        this.precisaoConfig = sharedPref.getInt("precisao", 1);
+        this.velocidadeConfig = sharedPref.getInt("velocidade", 1);
+        this.orientacaoConfig = sharedPref.getInt("orientacao", 1);
+        this.tipoMapaConfig = sharedPref.getInt("tipoMapa", 1);
+        this.trafegoConfig = sharedPref.getBoolean("trafego",true);
     }
 
     public void setInfosOverMap(){
-        this.mapLat.setText( "latitude: " + this.latitude );
-        this.mapLong.setText( "longitude: " + this.longitude );
+        this.mapLat.setText( "latitude: " + this.getModifiedCord(this.latitude) );
+        this.mapLong.setText( "longitude: " + this.getModifiedCord(this.longitude) );
         this.mapAlt.setText( "altitude: " + this.altitude );
         this.mapSpeed.setText( "Velocidade: " + this.speed );
+    }
+
+    private String getModifiedCord(Double cord){
+        String latString = Double.toString(cord);
+        String newLatString;
+        switch (this.precisaoConfig){
+            case 1 :
+                newLatString = Location.convert(Double.parseDouble(latString), Location.FORMAT_DEGREES);
+                break;
+            case 2:
+                newLatString = Location.convert(Double.parseDouble(latString), Location.FORMAT_MINUTES);
+            break;
+            case 3 :
+                newLatString = Location.convert(Double.parseDouble(latString), Location.FORMAT_SECONDS);
+                break;
+            default:
+                newLatString = Location.convert(Double.parseDouble(latString), Location.FORMAT_SECONDS);
+                break;
+        }
+        return newLatString;
     }
 
     public void setCellLocation() {
         try {
             String provider = locManager.PASSIVE_PROVIDER;
-            Location location = this.locManager.getLastKnownLocation(provider.toString());
+            //String provider = locManager.GPS_PROVIDER; testar em outro celular o meu gps é quebrado;
+
+            this.location = this.locManager.getLastKnownLocation(provider.toString());
             if(location !=null){
-                this.latitude = location.getLatitude();
-                this.longitude = location.getLongitude();
-                this.speed = location.getSpeed();
-                this.altitude = location.getAltitude();
+                this.latitude = this.location.getLatitude();
+                this.longitude = this.location.getLongitude();
+                this.speed = this.location.getSpeed();
+                this.altitude = this.location.getAltitude();
 
                 this.setInfosOverMap();
             }
-
         }catch (SecurityException e){
             e.printStackTrace();
             return;
@@ -115,6 +148,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
 
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mMap = googleMap;
+        LatLng cellPhoneLocation = new LatLng(this.latitude, this.longitude);
+        mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
+
     }
 
     @Override

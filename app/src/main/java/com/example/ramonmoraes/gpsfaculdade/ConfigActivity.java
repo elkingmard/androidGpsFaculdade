@@ -13,9 +13,9 @@ public class ConfigActivity extends AppCompatActivity {
 
     private Integer precisao; //1 = grao-decimal , 2 = grau-minuto decimal , 3 = grau-minuto-segundo decimal
     private Integer velocidade; // 1= Km/h , 2 = Mph
-    private Integer orientacao; //1-nenhuma 2 - north up 3-course up
+    private Integer orientacao; //1-nenhuma 2 - north up , 3-course up
     private Integer tipoMapa; //1= vetorial , 2 = imagem satelite;
-    private Boolean trafego;
+    private Boolean trafego; //true ativado , false=desativado
 
 
     private RadioButton btnPrecisao1;
@@ -44,6 +44,7 @@ public class ConfigActivity extends AppCompatActivity {
         setContentView(R.layout.activity_config);
         instanceButtons();
         loadConfigPref();
+
         btnSalvar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -176,10 +177,10 @@ public class ConfigActivity extends AppCompatActivity {
 
     private void loadConfigPrefValues() {
         SharedPreferences sharedPref = getSharedPreferences("gpsConfig",CONTEXT_IGNORE_SECURITY);
-        this.precisao = sharedPref.getInt("precisao", -1);
-        this.velocidade = sharedPref.getInt("velocidade", -1);
-        this.orientacao = sharedPref.getInt("orientacao", -1);
-        this.tipoMapa = sharedPref.getInt("tipoMapa", -1);
+        this.precisao = sharedPref.getInt("precisao", 1);
+        this.velocidade = sharedPref.getInt("velocidade", 1);
+        this.orientacao = sharedPref.getInt("orientacao", 1);
+        this.tipoMapa = sharedPref.getInt("tipoMapa", 1);
         this.trafego = sharedPref.getBoolean("trafego",true);
 
         Toast.makeText(getApplicationContext(),this.trafego.toString(), Toast.LENGTH_SHORT).show();
