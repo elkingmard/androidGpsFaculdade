@@ -82,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mapLat.setText( "latitude: " + this.getModifiedCord(this.latitude) );
         this.mapLong.setText( "longitude: " + this.getModifiedCord(this.longitude) );
         this.mapAlt.setText( "altitude: " + this.altitude );
-        this.mapSpeed.setText( "Velocidade: " + this.speed );
+        this.mapSpeed.setText( "Velocidade: " + this.getModifiedSpeed());
     }
 
     private String getModifiedCord(Double cord){
@@ -104,7 +104,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         return newLatString;
     }
-
+    private String getModifiedSpeed(){
+        String newSpeed = Double.toString(this.speed); // dado original em m/s
+        String speedKMH = Double.toString(this.speed * 3.6)+"Km/hr";
+        String speedMPH = Double.toString(this.speed * 2.23694)+"Mph";
+        newSpeed = (this.velocidadeConfig==1) ? speedKMH : speedMPH;
+        return newSpeed;
+    }
     public void setCellLocation() {
         try {
             String provider = locManager.PASSIVE_PROVIDER;
