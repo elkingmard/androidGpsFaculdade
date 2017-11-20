@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,6 +28,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double longitude;
     private double altitude;
     private double speed;
+
+    private TextView mapLat;
+    private TextView mapLong;
+    private TextView mapAlt;
+    private TextView mapSpeed;
+
     private LocationManager locManager; // O Gerente de localização
     private LocationProvider locPro; // Provedor de localização
     private static final int REQUEST_LOCATION = 2;
@@ -42,6 +49,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+        mapLat = (TextView) findViewById(R.id.textLatMap);
+        mapLong = (TextView) findViewById(R.id.textLongMap);
+        mapAlt = (TextView) findViewById(R.id.textAltMap);
+        mapSpeed = (TextView) findViewById(R.id.textSpeedMap);
     }
 
     @Override
@@ -54,7 +65,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void setInfosOverMap(){
 
-
+        this.mapLat.setText( "latitude: " + this.latitude );
+        this.mapLong.setText( "longitude: " + this.longitude );
+        this.mapAlt.setText( "altitude: " + this.altitude );
+        this.mapSpeed.setText( "Velocidade: " + this.speed );
 
     }
 
