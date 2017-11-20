@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class ConfigActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class ConfigActivity extends AppCompatActivity {
     private RadioButton btnOrientacao2;
     private RadioButton btnOrientacao3;
 
-    private Button btnTrafego;
+    private Switch btnTrafego;
 
     private Button btnSalvar;
 
@@ -69,7 +70,7 @@ public class ConfigActivity extends AppCompatActivity {
         this.btnOrientacao2 = (RadioButton)findViewById(R.id.btnOrientacao2);
         this.btnOrientacao3 = (RadioButton)findViewById(R.id.btnOrientacao3);
 
-        this.btnTrafego = (Button)findViewById(R.id.btnTrafego);
+        this.btnTrafego = (Switch) findViewById(R.id.btnTrafego);
         this.btnSalvar = (Button)findViewById(R.id.btnSalvar);
     }
 
@@ -83,6 +84,9 @@ public class ConfigActivity extends AppCompatActivity {
         editor.putInt("tipoMapa",this.tipoMapa);
         editor.putBoolean("trafego",this.trafego);
         editor.commit();
+
+        Toast.makeText(getApplicationContext(),"Configurações Salvas", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void modifyAtributesValues(){
@@ -100,7 +104,7 @@ public class ConfigActivity extends AppCompatActivity {
         if(btnMapType1.isChecked()) this.tipoMapa=1;
         if(btnMapType2.isChecked()) this.tipoMapa=2;
 
-        this.trafego = (btnTrafego.isActivated()) ? true : false;
+        this.trafego = (btnTrafego.isChecked());
 
         saveConfigPref();
     }
@@ -163,9 +167,9 @@ public class ConfigActivity extends AppCompatActivity {
         }
 
         if(this.trafego){
-            btnTrafego.setActivated(true);
+            btnTrafego.setChecked(true);
         }else{
-            btnTrafego.setActivated(false);
+            btnTrafego.setChecked(false);
         }
 
     }
@@ -176,6 +180,8 @@ public class ConfigActivity extends AppCompatActivity {
         this.velocidade = sharedPref.getInt("velocidade", -1);
         this.orientacao = sharedPref.getInt("orientacao", -1);
         this.tipoMapa = sharedPref.getInt("tipoMapa", -1);
-        this.trafego = sharedPref.getBoolean("trafego",false);
+        this.trafego = sharedPref.getBoolean("trafego",true);
+
+        Toast.makeText(getApplicationContext(),this.trafego.toString(), Toast.LENGTH_SHORT).show();
     }
 }
