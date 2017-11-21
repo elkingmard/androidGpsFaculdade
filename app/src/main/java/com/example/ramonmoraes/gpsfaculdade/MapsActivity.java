@@ -117,8 +117,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(this.orientacaoConfig==2){
             this.location.setBearing(this.location.getBearing());
         }
+        if(this.orientacaoConfig==3){
+            // usar bearingTo até um ponto predestinado;
+        }
 
     }
+
     public void setCellLocation() {
         try {
             String provider = locManager.PASSIVE_PROVIDER;

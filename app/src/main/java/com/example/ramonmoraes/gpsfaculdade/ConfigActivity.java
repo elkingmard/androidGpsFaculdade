@@ -182,7 +182,5 @@ public class ConfigActivity extends AppCompatActivity {
         this.orientacao = sharedPref.getInt("orientacao", 1);
         this.tipoMapa = sharedPref.getInt("tipoMapa", 1);
         this.trafego = sharedPref.getBoolean("trafego",true);
-
-        Toast.makeText(getApplicationContext(),this.trafego.toString(), Toast.LENGTH_SHORT).show();
     }
 }
