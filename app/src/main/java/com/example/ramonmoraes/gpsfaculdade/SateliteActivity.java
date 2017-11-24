@@ -2,6 +2,7 @@ package com.example.ramonmoraes.gpsfaculdade;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -72,7 +73,7 @@ public class SateliteActivity extends AppCompatActivity implements LocationListe
     private void loopOverSateliteList() {
 
         int nSat = this.gpsStatus.getMaxSatellites();
-        Log.d("CREATION", valueOf(nSat));
+        this.cleanSatList();
 
         if (this.gpsStatus != null) {
             Log.d("CREATION", "GPS STATUS !=NULL");
@@ -84,28 +85,39 @@ public class SateliteActivity extends AppCompatActivity implements LocationListe
 
     }
 
+    private void cleanSatList(){
+        this.table.removeAllViews();
+    }
+
     private void createSatOption(GpsSatellite satInfo){
-        TableRow row  = new TableRow(this);
-        LinearLayout linearLayout = new LinearLayout(this);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-        row.setLayoutParams(lp);
 
-        TextView azimuth = new TextView(this);
-        TextView elevation = new TextView(this);
-        TextView power = new TextView(this);
+        if(satInfo.getAzimuth()*satInfo.getElevation()!=0) {
 
-        azimuth.setText(valueOf(satInfo.getAzimuth()));
-        elevation.setText(valueOf(satInfo.getElevation()));
-        power.setText(valueOf(satInfo.getSnr()));
+            TableRow row = new TableRow(this);
+            LinearLayout linearLayout = new LinearLayout(this);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
 
-        linearLayout.addView(azimuth,0);
-        linearLayout.addView(elevation,1);
-        linearLayout.addView(power,2);
+            TextView azimuth = new TextView(this);
+            TextView elevation = new TextView(this);
+            TextView power = new TextView(this);
 
-        row.addView(linearLayout);
+            azimuth.setText(valueOf(satInfo.getAzimuth()));
+            elevation.setText(valueOf(satInfo.getElevation()));
+            power.setText(valueOf(satInfo.getSnr()));
 
-        this.table.addView(row,0);
+            azimuth.setPadding(35, 15, 35, 15);
+            elevation.setPadding(35, 15, 35, 15);
+            power.setPadding(35, 15, 35, 15);
 
+            linearLayout.addView(azimuth, 0);
+            linearLayout.addView(elevation, 1);
+            linearLayout.addView(power, 2);
+
+            row.addView(linearLayout);
+            this.table.addView(row, 0);
+
+        }
     }
 
     private void setTextViews() {
