@@ -5,23 +5,28 @@ import android.content.pm.PackageManager;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Iterator;
 import java.util.List;
 
-public class SateliteActivity extends AppCompatActivity{
+import static java.lang.String.valueOf;
 
-    ListView table;
+public class SateliteActivity extends AppCompatActivity implements LocationListener,GpsStatus.Listener{
+
+    TableLayout table;
     TextView satLat, satLong, satAlt;
 
     private double longitude, speed, altitude;
@@ -47,20 +52,17 @@ public class SateliteActivity extends AppCompatActivity{
     private void instanceElements() {
 
         this.locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        this.addGpsListener();
         this.satLat = (TextView) findViewById(R.id.satLat);
         this.satLong = (TextView) findViewById(R.id.satLong);
         this.satAlt = (TextView) findViewById(R.id.satAlt);
-        this.table = (ListView) findViewById(R.id.satList);
+        this.table = (TableLayout) findViewById(R.id.satList);
 
     }
 
     private void addGpsListener() {
         try {
             this.gpsStatus = locManager.getGpsStatus(null);
-
             this.sateliteList = this.gpsStatus.getSatellites();
-            this.loopOverSateliteList();
         } catch (SecurityException e) {
             e.printStackTrace();
             return;
@@ -70,18 +72,39 @@ public class SateliteActivity extends AppCompatActivity{
     private void loopOverSateliteList() {
 
         int nSat = this.gpsStatus.getMaxSatellites();
-        Log.d("CREATION", String.valueOf(nSat));
+        Log.d("CREATION", valueOf(nSat));
 
         if (this.gpsStatus != null) {
             Log.d("CREATION", "GPS STATUS !=NULL");
 
             for(GpsSatellite satInfo : this.sateliteList){
-                //Nao entra nesse for...
-                double azi = satInfo.getAzimuth();
-                Log.d("CREATION", String.valueOf(azi));
-
+                this.createSatOption(satInfo);
             }
         }
+
+    }
+
+    private void createSatOption(GpsSatellite satInfo){
+        TableRow row  = new TableRow(this);
+        LinearLayout linearLayout = new LinearLayout(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+        row.setLayoutParams(lp);
+
+        TextView azimuth = new TextView(this);
+        TextView elevation = new TextView(this);
+        TextView power = new TextView(this);
+
+        azimuth.setText(valueOf(satInfo.getAzimuth()));
+        elevation.setText(valueOf(satInfo.getElevation()));
+        power.setText(valueOf(satInfo.getSnr()));
+
+        linearLayout.addView(azimuth,0);
+        linearLayout.addView(elevation,1);
+        linearLayout.addView(power,2);
+
+        row.addView(linearLayout);
+
+        this.table.addView(row,0);
 
     }
 
@@ -114,11 +137,31 @@ public class SateliteActivity extends AppCompatActivity{
     public void ativaGPS() {
 
         try {
+
             this.locPro = locManager.getProvider(LocationManager.GPS_PROVIDER);
+            this.locManager.requestLocationUpdates(this.locPro.getName(), 3000, 1, this);
+            locManager.addGpsStatusListener((GpsStatus.Listener) this);
+
+
         } catch (SecurityException e) {
             e.printStackTrace();
         }
 
+    }
+    public void desativaGPS(){
+        try {
+            locManager.removeUpdates(this);
+            locManager.removeGpsStatusListener((GpsStatus.Listener) this);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.desativaGPS();
     }
 
     @Override
@@ -154,4 +197,32 @@ public class SateliteActivity extends AppCompatActivity{
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        this.loopOverSateliteList();
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+//        this.addGpsListener();
+//        this.loopOverSateliteList();
+//        Log.d("CREATION", provider);
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onGpsStatusChanged(int event) {
+        this.addGpsListener();
+        this.loopOverSateliteList();
+    }
 }
