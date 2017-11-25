@@ -40,7 +40,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
@@ -60,4 +60,30 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="201dp"
+        android:layout_height="26dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="218dp"
+        android:text="Aplicativo contendo 5 activities"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintHorizontal_bias="0.503" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="263dp"
+        android:layout_height="68dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:text="Tela Inicial, Tela de Configuração , Tela de Navegação Online,Tela do GNSS , Tela de Creditos"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        app:layout_constraintHorizontal_bias="0.506" />
 </android.support.constraint.ConstraintLayout>
