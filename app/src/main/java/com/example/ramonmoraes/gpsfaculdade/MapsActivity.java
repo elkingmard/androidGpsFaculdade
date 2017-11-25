@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -67,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapLong = (TextView) findViewById(R.id.textLongMap);
         mapAlt = (TextView) findViewById(R.id.textAltMap);
         mapSpeed = (TextView) findViewById(R.id.textSpeedMap);
-        
+
     }
 
 
@@ -194,7 +195,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = googleMap;
         LatLng cellPhoneLocation = new LatLng(this.latitude, this.longitude);
-        mMap.addMarker(new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui"));
+
+        //Adicionar icone diferente no marcador
+        MarkerOptions marker = new MarkerOptions().position(cellPhoneLocation).title("Você esta aqui");
+        marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.coffee));
+        mMap.addMarker(marker);
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cellPhoneLocation));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15.0f));
 
