@@ -62,10 +62,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void instanceTextView(){
+
         mapLat = (TextView) findViewById(R.id.textLatMap);
         mapLong = (TextView) findViewById(R.id.textLongMap);
         mapAlt = (TextView) findViewById(R.id.textAltMap);
         mapSpeed = (TextView) findViewById(R.id.textSpeedMap);
+        
     }
 
 

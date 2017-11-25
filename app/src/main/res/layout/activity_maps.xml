@@ -19,36 +19,36 @@ android:layout_height="fill_parent" >
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="11dp"
-        android:layout_marginTop="12dp"
         android:text="textLatMap"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_above="@+id/textLongMap"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="19dp" />
 
     <TextView
         android:id="@+id/textLongMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="textLongMap"
-        android:layout_below="@+id/textLatMap"
-        android:layout_alignStart="@+id/textLatMap" />
+        android:layout_above="@+id/textAltMap"
+        android:layout_alignStart="@+id/textLatMap"
+        android:layout_marginBottom="20dp" />
 
     <TextView
         android:id="@+id/textAltMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="TextView"
-        android:layout_below="@+id/textLongMap"
-        android:layout_alignStart="@+id/textLongMap" />
+        android:layout_above="@+id/textSpeedMap"
+        android:layout_alignStart="@+id/textLongMap"
+        android:layout_marginBottom="15dp" />
 
     <TextView
         android:id="@+id/textSpeedMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="textSpeedMap"
-        android:layout_below="@+id/textAltMap"
+        android:layout_marginBottom="40dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/textAltMap" />
 
 </RelativeLayout>
